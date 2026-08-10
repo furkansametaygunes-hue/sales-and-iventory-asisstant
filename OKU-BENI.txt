@@ -1,0 +1,99 @@
+URUN TREND ANALIZI
+==================
+
+IKI SURUM VAR
+-------------
+
+1) PORTFOLYO SURUMU  ->  BASLAT-WINDOWS.bat
+   Hazir ornek veriyle calisir. Universite basvurusu icin olan bu.
+
+2) ISLETME SURUMU    ->  BASLAT-ISLETME.bat
+   Isletmenin kendi Excel dosyasini yukleyip analiz eder.
+   Musteriye gosterecegin surum bu.
+
+Mac'tesen sonu .command olan dosyalari kullan.
+
+
+NASIL ACILIR
+------------
+Ilgili BASLAT dosyasina CIFT TIKLA. Baska hicbir sey gerekmiyor.
+Kapatmak icin siyah pencerede Ctrl+C.
+
+Ilk acilista paketleri kurar (1-2 dakika). Sonrakilerde hemen acilir.
+
+
+TEKRAR ACMAK ICIN
+-----------------
+Ayni BASLAT dosyasina tekrar cift tikla. Hepsi bu.
+
+Masaustune kisayol koymak istersen:
+  BASLAT dosyasina sag tik -> Kisayol olustur
+  -> olusan kisayolu masaustune tasi
+
+
+ISLETME SURUMU NASIL KULLANILIR
+-------------------------------
+1. BASLAT-ISLETME.bat -> cift tik
+2. Soldan SATIS dosyasini yukle (Excel/CSV)
+3. Varsa STOK dosyasini da yukle - siparis miktari icin sart
+4. Soldan tedarik suresi ve siparis sikligini gir
+5. 4 sekme cikar:
+
+   BU HAFTA NE YAPMALI  -> siparis listesi. Hangi urunden kac adet.
+                           Tukenenler, fazla stoklular.
+   TREND                -> hangi urun yukseliyor, hangisi oluyor
+   PARA NEREDE          -> cironun %80'ini getiren urunler (ABC)
+   OLU STOK             -> aylardir satmayan mal, bagli para
+
+6. "Excel raporu indir" ile hepsini Excel olarak al
+
+Satis dosyasinda olmasi gerekenler: tarih, urun adi, adet
+  (fiyat ve maliyet varsa ciro/kar da hesaplanir)
+Stok dosyasinda: urun adi, mevcut stok adedi
+
+testdata/ klasorunde demo icin ornek dosyalar var:
+  kafe_satis.xlsx + stok_durumu.xlsx  -> ikisini birlikte yukle
+  market.csv                          -> noktali virgullu CSV ornegi
+  shop_en.xlsx                        -> ingilizce kolonlu ornek
+
+
+SIPARIS HESABI NASIL CALISIYOR
+------------------------------
+Standart stok yonetimi formulleri:
+
+  gunluk talep    = son 56 gunun ortalama gunluk satisi
+  emniyet stogu   = z x talep sapmasi x karekok(tedarik + siparis araligi)
+  siparis noktasi = gunluk talep x tedarik suresi + emniyet stogu
+  hedef seviye    = gunluk talep x (tedarik + aralik) + emniyet stogu
+  SIPARIS         = hedef seviye - eldeki stok
+
+Mevsimsellik hesaba katilmiyor. Bayram/sezon oncesi isletmeci
+kendi bilgisiyle artirmali. Bunu musteriye acikca soyle.
+
+MUSTERIYE OZEL GORUNUM
+----------------------
+app_business.py dosyasini Not Defteri ile ac, en ustteki
+BRAND bolumunu degistir:
+
+    BRAND = {
+        "company": "Kahve Duragi",        <- isletmenin adi
+        "subtitle": "Satis panosu",
+        "currency": "TL",
+        "logo": "logo.png",               <- logoyu klasore koy
+    }
+
+Renkler icin .streamlit/config.toml dosyasindaki primaryColor.
+
+
+ICINDE NE VAR
+-------------
+app.py                 portfolyo dashboard'u (hazir veri)
+app_business.py        isletme surumu (Excel yukleme)
+src/make_sample_data.py  ornek veri uretir
+src/clean.py           veriyi temizler
+src/analyze.py         trendline hesaplar
+src/load_db.py         SQLite veritabani
+sql/                   SQL sorgulari
+testdata/              demo icin ornek Excel/CSV dosyalari
+.streamlit/config.toml renk ayarlari
+README.md              GitHub icin proje aciklamasi
